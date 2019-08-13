@@ -14,7 +14,7 @@ public class AnagramController implements ErrorController {
 
     private HashMap<String, String[]> dataStore = new HashMap<>();
     private Gson gson = new Gson();
-    private HashMap<String,String> routes = new HashMap<>(){
+    private HashMap<String,String> routes = new HashMap<String,String>(){
         {
             put("/", "Initial Load of store, it can take a few seconds");
             put("POST /words.json", "Takes a JSON array of English-language words and adds them to the corpus (data store).");
