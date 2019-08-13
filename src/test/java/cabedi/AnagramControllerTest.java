@@ -12,6 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.HashMap;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -24,7 +26,6 @@ public class AnagramControllerTest {
     @Autowired
     private MockMvc mvc;
 
-
     private void setUpStore() throws Exception {
         String json="{\"anagrams\": [\"word\",\"drow\"]}";
         mvc.perform(post("/words.json")
@@ -33,10 +34,9 @@ public class AnagramControllerTest {
     }
 
     @Test
-    public void HelloApi() throws Exception {
+    public void ApiHome() throws Exception {
         mvc.perform(get("/"))
-                .andExpect((status().isOk()))
-                .andExpect((content().string("{\"Initial Load of store can take a few seconds\"}")));
+                .andExpect(status().isOk());
     }
 
     @Test
