@@ -4,24 +4,14 @@
 
 package cabedi;
 
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.cache.CacheProperties;
-
-import javax.annotation.PostConstruct;
-
 
 @SpringBootApplication
 public class App {
+
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
-    }
-
-
-    @PostConstruct
-    private void init(){
-        new RedisManager("redis://localhost:6379/0").BulkSet();
     }
 
 }

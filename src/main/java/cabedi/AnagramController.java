@@ -1,51 +1,84 @@
 package cabedi;
-import org.springframework.web.bind.annotation.*;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import org.springframework.web.bind.annotation.*;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 @RestController
 public class AnagramController {
 
     //TODO: JsonStringify the routes
-    //TODO: Right testss
-    private RedisManager redisManager = new RedisManager("redis://localhost:6379/0");
+    //TODO: Right tests
 
+
+    private HashMap<String, String[]> dataStore = new HashMap<>();
+    private Gson gson = new Gson();
 
     @RequestMapping(value = "/")
-    public String HelloApi(){
-        String content="";
-        if (redisManager.StoreIsEmpty()) {
-            redisManager.BulkSet();
-        }
-        return "{ \"Initial Load of the Redis store can take a few seconds\" }";
+    public String HelloApi() {
+
+        dataStore = Utility.SetUpDataStore();
+        return "{\"Initial Load of store can take a few seconds\"}";
 
     }
 
-    @PostMapping(value = "/words.json",consumes="application/json")
-    public boolean PostWords(@RequestBody String words) throws Exception {
-        // Store words in Redis
+    @PostMapping(value = "/words.json", consumes = "application/json")
+    public String PostWords(@RequestBody final String json){
 
-        //TODD: Jsonify the Request body and store in redis
-        //for(String word: words.split())
-       redisManager.Set(RedisManager.SortString(words), word)
-        return true;
+        // Store words in HashMap equivalent of Json
+        Type type = new TypeToken<HashMap<String, String[]>>() {
+        }.getType();
+        HashMap<String, String[]> anagramJson = gson.fromJson(json, type);
+        String[] anagrams = anagramJson.get("anagrams");
+
+
+        String key = Utility.SortString(anagrams[0]);
+        dataStore.put(key, anagrams);
+
+        return gson.toJson(anagrams);
     }
 
     @RequestMapping(value = "/anagrams/{word}.json")
-    public String GetAnagrams (@PathVariable("word") final String word){
-        return redisManager.Get(RedisManager.SortString(word));
+    public String GetAnagrams(@PathVariable("word") final String word, @RequestParam(required = false) final Integer max) {
+        String key = Utility.SortString(word);
+
+        String [] anagrams = dataStore.get(key);
+
+        if (max != null)
+            return gson.toJson(Arrays.copyOfRange(anagrams,0, max));
+
+        return gson.toJson(anagrams);
     }
 
-    @DeleteMapping(value="/words/{word}")
-    public boolean DeleteAnagram(@PathVariable("word") final String word){
-        //Remove the one Word
-        return true;
+
+    @DeleteMapping(value = "/words/{word}.json")
+    public String[] DeleteAnagram(@PathVariable("word") final String word) {
+
+        String key = Utility.SortString(word);
+        ArrayList<String> currentAnagrams = new ArrayList<String>(Arrays.asList(dataStore.get(key)));
+        String [] error  = new String[] {"Word", word, "wasn't","found"};
+
+        if (!currentAnagrams.remove(word)) {
+            return error;
+        }
+
+        String[] newAnagrams = new String[currentAnagrams.size()];
+        newAnagrams = currentAnagrams.toArray(newAnagrams);
+
+        dataStore.put(key, newAnagrams);
+        return newAnagrams;
     }
 
-    @DeleteMapping(value="/words.json")
-    public String DeleteAnagram(){
+    @DeleteMapping(value = "/words.json")
+    public String DeleteAnagram() {
         //Remove all Words
-        redisManager.DeleteAll();
-        return "You flushed our DB :(";
+        if (dataStore.size()>0)
+            dataStore.clear();
+        return "You flushed our DB :)";
     }
 
 
