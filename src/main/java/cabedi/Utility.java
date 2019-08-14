@@ -19,32 +19,29 @@ class Utility {
         return content;
     }
 
-    static HashMap<String, String[]> SetUpDataStore(){
+    static HashMap<String, ArrayList<String>> SetUpDataStore(){
 
         String [] words = LoadDictionary().split("\n");
-        HashMap<String, String[]> dataStore = new HashMap<>();
+        HashMap<String, ArrayList<String>> dataStore = new HashMap<>();
 
         //Load Dictionary Into the correct value in DataStore
         for  (String word : words) {
-            List<String> currentAnagrams = null;
+            ArrayList<String> currentAnagrams = null;
             String key = Utility.SortString(word);
 
             //If word is not the first anagram of these letters
-            if ( dataStore.get(key)!=null)
-                currentAnagrams = new ArrayList<String> (Arrays.asList(dataStore.get(key)));
-            else
-                currentAnagrams = new ArrayList<String>();
-            String[] newAnagrams;
-
-            if ((currentAnagrams.size()  >  0)) {
+            if ( dataStore.get(key)!=null) {
+                currentAnagrams = dataStore.get(key);
                 currentAnagrams.add(word);
-                newAnagrams = new String[currentAnagrams.size()];
-                newAnagrams = currentAnagrams.toArray(newAnagrams);
-            } else {
-                newAnagrams = new String[1];
-                newAnagrams[0] = word;
             }
-            dataStore.put(key,newAnagrams);
+            else
+                currentAnagrams = new ArrayList<String>(){
+                    {
+                        add(word);
+                    }
+                };
+
+            dataStore.put(key,currentAnagrams);
         }
         return dataStore;
     }

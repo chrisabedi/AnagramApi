@@ -1,18 +1,28 @@
 package cabedi;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.fasterxml.jackson.core.ObjectCodec;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 public class AnagramController implements ErrorController {
 
-    private HashMap<String, String[]> dataStore = new HashMap<>();
+    private HashMap<String, ArrayList<String>> dataStore = new HashMap<>();
     private Gson gson = new Gson();
     private HashMap<String,String> routes = new HashMap<String,String>(){
         {
@@ -23,74 +33,82 @@ public class AnagramController implements ErrorController {
             put("DELETE /words.json", "Deletes all contents of the data store.");
         }
     };
+    ObjectMapper mapper = new ObjectMapper();
 
     @RequestMapping(value = "/")
     public HashMap<String,String> ApiHome() {
 
         dataStore = Utility.SetUpDataStore();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+        mapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
+
         return routes;
 
     }
 
     @PostMapping(value = "/words.json", consumes = "application/json")
-    public String[] PostWords(@RequestBody final String json){
+    @ResponseStatus(HttpStatus.CREATED)
+    public void PostWords(@RequestBody final String json) throws IOException {
 
         // Store words in HashMap equivalent of Json
-        Type type = new TypeToken<HashMap<String, String[]>>() {
-        }.getType();
-        HashMap<String, String[]> anagramJson = gson.fromJson(json, type);
-        String[] anagrams = anagramJson.get("anagrams");
+        JsonNode valuesNode = mapper.readTree(json).get("words");
 
+        ArrayList<String> words = new ArrayList<>();
+        for (JsonNode node : valuesNode) {
+            words.add(node.asText());
+        }
 
-        String key = Utility.SortString(anagrams[0]);
-        dataStore.put(key, anagrams);
-
-        return anagrams;
+        String key = Utility.SortString(words.get(0));
+        dataStore.put(key, words);
     }
 
     @RequestMapping(value = "/anagrams/{word}.json")
-    public String [] GetAnagrams(@PathVariable("word") final String word, @RequestParam(required = false) final Integer max) {
+    public ArrayList<String> GetAnagrams(@PathVariable("word") final String word, @RequestParam(required = false) final String limit) {
+
         String key = Utility.SortString(word);
+            if (dataStore.get(key)!=null) {
+                ArrayList<String> anagrams = new ArrayList<>(dataStore.get(key));
 
-        String [] anagrams = dataStore.get(key);
+                int max = anagrams.size() - 1;
+                if (limit != null)
+                    max = Integer.parseInt(limit);
 
-        if (max != null)
-            return Arrays.copyOfRange(anagrams,0, max);
+                anagrams.remove(word);
+                return new ArrayList<String>(anagrams.subList(0,max));
+            }
+            else
+                return new ArrayList<>();
+
+    }
+
+    @DeleteMapping(value = "/words/{word}.json")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ArrayList<String> DeleteAnagram(@PathVariable("word") final String word) {
+
+        String key = Utility.SortString(word);
+        ArrayList<String> anagrams = dataStore.get(key);
+
+        if (anagrams.remove(word)) {
+            dataStore.put(key, anagrams);
+        }
 
         return anagrams;
     }
 
-
-    @DeleteMapping(value = "/words/{word}.json")
-    public String[] DeleteAnagram(@PathVariable("word") final String word) {
-
-        String key = Utility.SortString(word);
-        ArrayList<String> currentAnagrams = new ArrayList<String>(Arrays.asList(dataStore.get(key)));
-        String [] error  = new String[] {"Word", word, "wasn't","found"};
-
-        if (!currentAnagrams.remove(word)) {
-            return error;
-        }
-
-        String[] newAnagrams = new String[currentAnagrams.size()];
-        newAnagrams = currentAnagrams.toArray(newAnagrams);
-
-        dataStore.put(key, newAnagrams);
-        return newAnagrams;
-    }
-
     @DeleteMapping(value = "/words.json")
-    public String DeleteAnagram() {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ArrayList<String> DeleteAnagram() {
         //Remove all Words
-        if (dataStore.size()>0)
+        if (dataStore.size()>0){
             dataStore.clear();
-        return "You flushed our DB :)";
+        }
+            return new ArrayList<String>();
     }
 
-    @RequestMapping(value="/error")
-    public HashMap<String,String> handleError() {
-        return routes;
-    }
+   // @RequestMapping(value="/error")
+    //public HashMap<String,String> handleError() {
+       // return routes;
+    //}
 
     @Override
     public String getErrorPath(){
