@@ -19,14 +19,15 @@ public class App {
     @Bean
     @Primary
     public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder builder) {
+
         ObjectMapper objectMapper = builder.createXmlMapper(false).build();
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         objectMapper.configure(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false);
+        objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
 
         return objectMapper;
     }
     public static void main(String[] args) {
-        System.setProperty("spring.jackson.serialization.INDENT_OUTPUT", "true");
         SpringApplication.run(App.class, args);
     }
 

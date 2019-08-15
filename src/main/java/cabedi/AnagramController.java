@@ -1,8 +1,6 @@
 package cabedi;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.gson.Gson;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
@@ -12,7 +10,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static javax.swing.UIManager.put;
 
 @RestController
 public class AnagramController implements ErrorController {
@@ -41,19 +38,13 @@ public class AnagramController implements ErrorController {
     @PostMapping(value = "/words.json", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public void PostWords(@RequestBody final String json) throws IOException {
-        //I have messed this route up :)
-        // Store words in HashMap equivalent of Json
-       // JsonNode valuesNode = objectMapper.readTree(json).get("words");
-        
 
+        final ObjectMapper mapper = new ObjectMapper();
 
-        ArrayList<String> words = new ArrayList<>();
-        for (JsonNode node : valuesNode) {
-            words.add(node.asText());
-        }
+        HashMap<String,ArrayList<String>> words = mapper.readValue(json,new HashMap<String, ArrayList<String>>().getClass());
 
-        String key = Utility.SortString(words.get(0));
-        dataStore.put(key, words);
+       String key = Utility.SortString(words.get("words").get(0));
+       dataStore.put(key, words.get("words"));
     }
 
     @RequestMapping(value = "/anagrams/{word}.json",produces=MediaType.APPLICATION_JSON_VALUE)
@@ -78,7 +69,7 @@ public class AnagramController implements ErrorController {
                 };
             }
             else
-                return new HashMap<String,ArrayList<String>(){
+                return new HashMap<String,ArrayList<String>>(){
                     {
                         put("anagrams", new ArrayList<String>());
                     }
@@ -99,7 +90,7 @@ public class AnagramController implements ErrorController {
 
         return new HashMap<String,ArrayList<String>>(){
             {
-                put("words",anagrams);
+                put("words", anagrams);
             }
         };
     }
@@ -107,7 +98,7 @@ public class AnagramController implements ErrorController {
     @DeleteMapping(value = "/words.json")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public HashMap<String,ArrayList<String>> DeleteAnagram() {
-        //Remove all Words
+
         if (dataStore.size()>0){
             dataStore.clear();
         }
@@ -117,11 +108,6 @@ public class AnagramController implements ErrorController {
                 }
             };
     }
-
-   // @RequestMapping(value="/error")
-    //public HashMap<String,String> handleError() {
-       // return routes;
-    //}
 
     @Override
     public String getErrorPath(){
