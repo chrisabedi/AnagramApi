@@ -48,8 +48,9 @@ class Utility {
 
     //array sort for 0(N log N)
     static String SortString(String str) {
-        char []arr = str.toCharArray();
-        Arrays.sort(arr);
-        return String.valueOf(arr);
+
+        char []tempArray = str.toCharArray();
+        Arrays.sort(tempArray);
+        return String.valueOf(tempArray);
     }
 }
