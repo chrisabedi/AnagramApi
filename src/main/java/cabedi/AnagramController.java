@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 
 @RestController
-public class AnagramController implements ErrorController {
+public class AnagramController {
 
     @Autowired
     private  HashMap<String, ArrayList<String>> dataStore;
@@ -91,9 +91,6 @@ public class AnagramController implements ErrorController {
             };
     }
 
-    @Override
-    public String getErrorPath(){
-        return "/error";
-    }
+
 
 }

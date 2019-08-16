@@ -8,9 +8,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-You will need to have java installed
-
-[Java](https://www.oracle.com/technetwork/java/javase/downloads/jdk12-downloads-5295953.html)
+You will need to have [Java](https://www.oracle.com/technetwork/java/javase/downloads/jdk12-downloads-5295953.html) Installed. 
 
 ```
 
@@ -18,9 +16,7 @@ You will need to have java installed
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
+The steps to get this system up and running are to call gradlew build,
 
 ```
 gradlew build
@@ -42,28 +38,30 @@ End with an example of getting some data out of the system or using it for a lit
 [Ruby](https://ruby-doc.org/)
 
 
-Explain how to run the automated tests for this system
-Tests for this system were provided in ruby scripts
+Tests for this system were provided in ruby scripts. You can execute them with the command 
+```ruby anagram_test.rb```
 
 ### Break down into end to end tests
 
-Explain what these tests test and why
+These test test the endpoints response status as well as functionality of the web api
 
 ```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
+>ruby anagram_test.rb
+Loaded suite anagram_test
+Started
+.......
+Finished in 0.527031 seconds.
+------------------------------------------------------------------------------------------------------------------------
+7 tests, 20 assertions, 0 failures, 0 errors, 0 pendings, 0 omissions, 0 notifications
+100% passed
+------------------------------------------------------------------------------------------------------------------------
+13.28 tests/s, 37.95 assertions/s
 ```
 
 ## Deployment
 
-Add additional notes about how to deploy this on a live system
+A [Heroku](https://heroku.com) CI/CD pipeline is watching, building and deploying off PR into the master branch at
+https://anagram-api-chris.herokuapp.com/
 
 ## Built With
 
