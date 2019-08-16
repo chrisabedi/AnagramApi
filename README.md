@@ -2,6 +2,11 @@
 
 A Spring boot web api for serving anagrams of english words
 
+### Built With
+
+* [Spring Boot](https://spring.io/) - The web framework used
+* [Gradle](https://gradle.org/) - Dependency Management
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
@@ -9,7 +14,6 @@ These instructions will get you a copy of the project up and running on your loc
 ### Prerequisites
 
 You will need to have [Java](https://www.oracle.com/technetwork/java/javase/downloads/jdk12-downloads-5295953.html) Installed
-
 
 ### Installing
 
@@ -33,7 +37,7 @@ The endpoints will be available at:
 - `POST /words.json`: Takes a JSON array of English-language words and adds them to the corpus (data store).
 - `GET /anagrams/:word.json`:
   - Returns a JSON array of English-language words that are anagrams of the word passed in the URL.
-  - This endpoint should support an optional query param that indicates the maximum number of results to return.
+  - Supports an optional query param 'limit' that indicates the maximum number of results to return.
 - `DELETE /words/:word.json`: Deletes a single word from the data store.
 - `DELETE /words.json`: Deletes all contents of the data store.
 
@@ -42,19 +46,19 @@ The endpoints will be available at:
 ## Running the tests
 
 
-###Prerequisites
+### Prerequisites
 
 [Ruby](https://ruby-doc.org/)
 
 
-Tests for this system were provided in ruby scripts. You can execute them with the command 
+Tests for this system were provided in ruby scripts. In the you can execute them with the command 
 ```
 ruby anagram_test.rb
 ```
 
-### Break down into end to end tests
+### what do they test?
 
-These test test the endpoints response status as well as functionality of the web api
+These tests test the endpoints response status as well as functionality of the web api
 
 ```
 >ruby anagram_test.rb
@@ -71,25 +75,7 @@ Finished in 0.527031 seconds.
 
 ## Deployment
 
-A [Heroku](https://heroku.com) CI/CD pipeline is watching, building and deploying off PR into the master branch at
+A [Heroku](https://heroku.com) CI/CD pipeline is watching, building and deploying off merges into the master branch at
 
 https://anagram-api-chris.herokuapp.com/
 
-## Built With
-
-* [Spring Boot](https://spring.io/) - The web framework used
-* [Gradle](https://gradle.org/) - Dependency Management
-
-## Authors
-
-* **Chris Abedi** - *Initial work* - [chrisabedi](https://github.com/chrisabedi)
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
