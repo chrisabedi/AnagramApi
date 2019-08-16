@@ -11,7 +11,7 @@ class Utility {
         String content = "";
         //Implement Read from File if File is not Read
         try{
-            content = new String(Files.readAllBytes(Paths.get("src/main/dictionary.txt")));
+            content = new String(Files.readAllBytes(Paths.get("src/main/resources/dictionary.txt")));
 
         } catch (IOException ex){
             ex.printStackTrace();

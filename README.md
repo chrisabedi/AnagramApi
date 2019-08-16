@@ -8,27 +8,36 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-You will need to have [Java](https://www.oracle.com/technetwork/java/javase/downloads/jdk12-downloads-5295953.html) Installed. 
+You will need to have [Java](https://www.oracle.com/technetwork/java/javase/downloads/jdk12-downloads-5295953.html) Installed
 
-```
-
-```
 
 ### Installing
 
-The steps to get this system up and running are to call gradlew build,
+The steps to get this system up and running are provided. You can use your own installation of gradle aswell, just remove the "w" from the next commands.
+ To run inside intellij, Gradle version 4.x since the intellij plugin is dependent on it.
 
 ```
 gradlew build
 ```
 
-And repeat
-
+then 
 ```
-until finished
+gradlew run
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
+The endpoints will be available at:
+
+[localhost:8080/anagrams/listen.json](localhost:8080/anagrams/listen.json)
+
+### Supported Routes
+- `POST /words.json`: Takes a JSON array of English-language words and adds them to the corpus (data store).
+- `GET /anagrams/:word.json`:
+  - Returns a JSON array of English-language words that are anagrams of the word passed in the URL.
+  - This endpoint should support an optional query param that indicates the maximum number of results to return.
+- `DELETE /words/:word.json`: Deletes a single word from the data store.
+- `DELETE /words.json`: Deletes all contents of the data store.
+
+
 
 ## Running the tests
 
@@ -39,7 +48,9 @@ End with an example of getting some data out of the system or using it for a lit
 
 
 Tests for this system were provided in ruby scripts. You can execute them with the command 
-```ruby anagram_test.rb```
+```
+ruby anagram_test.rb
+```
 
 ### Break down into end to end tests
 
@@ -61,6 +72,7 @@ Finished in 0.527031 seconds.
 ## Deployment
 
 A [Heroku](https://heroku.com) CI/CD pipeline is watching, building and deploying off PR into the master branch at
+
 https://anagram-api-chris.herokuapp.com/
 
 ## Built With
