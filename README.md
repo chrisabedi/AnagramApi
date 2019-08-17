@@ -1,6 +1,7 @@
 # Anagram Api
 
-A Spring boot web api for serving anagrams of english words
+A Spring boot web api for serving anagrams of english words. On start up, it loads a text file containing the english 
+dictionary, `src/main/resources/dictionary.txt`
 
 ### Built With
 
@@ -13,12 +14,15 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-You will need to have [Java](https://www.oracle.com/technetwork/java/javase/downloads/jdk12-downloads-5295953.html) Installed
+You will need to have [Java jdk12](https://www.oracle.com/technetwork/java/javase/downloads/jdk12-downloads-5295953.html) Installed
 
 ### Installing
 
 The steps to get this system up and running are provided. You can use your own installation of gradle aswell, just remove the "w" from the next commands.
- To run inside intellij, Gradle version 4.x since the intellij plugin is dependent on it.
+ To run inside intellij, Gradle version 4.x since the intellij plugin is dependent on it. 
+ 
+The gradlew is [Gradle](https://gradle.org/) 4.9, as the spring boot Intellij plugin has a dependency on version 4.x. 
+ 
 
 ```
 gradlew build
@@ -38,25 +42,29 @@ The endpoints will be available at:
 - `GET /anagrams/:word.json`:
   - Returns a JSON array of English-language words that are anagrams of the word passed in the URL.
   - Supports an optional query param 'limit' that indicates the maximum number of results to return.
+- `GET /anagrams/largest`: Returns the anagrams with the most words
 - `DELETE /words/:word.json`: Deletes a single word from the data store.
 - `DELETE /words.json`: Deletes all contents of the data store.
-
+- `DELETE /words/remove/:word.json` Deletes a word and all of its anagrams
 
 
 ## Running the tests
 
+There is a testing class under `src/test/java/cabedi/` that verifies the routes are working as intended. Along with that,
+there is a ruby script that runs some more provided tests
 
 ### Prerequisites
 
 [Ruby](https://ruby-doc.org/)
 
 
-Tests for this system were provided in ruby scripts. In the you can execute them with the command 
+Tests for this system were provided in ruby scripts. They are found in `src/test/resources`
+and you can execute them with the command 
 ```
 ruby anagram_test.rb
 ```
 
-### what do they test?
+#### what do they test?
 
 These tests test the endpoints response status as well as functionality of the web api
 
