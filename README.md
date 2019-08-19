@@ -53,6 +53,16 @@ The endpoints will be available at:
 There is a testing class under `src/test/java/cabedi/` that verifies the routes are working as intended. Along with that,
 there is a ruby script that runs some more provided tests
 
+you can run mvc tests provided with the command 
+
+```
+gradlew test
+```
+
+The results can be viewed in a html document by navigating to `build/reports/tests/test/classes/cabedi.AnagramControllerTest.html`
+
+![Capture.jpg](Capture.JPG)
+
 ### Prerequisites
 
 [Ruby](https://ruby-doc.org/)
