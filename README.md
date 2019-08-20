@@ -18,10 +18,9 @@ You will need to have [Java jdk12](https://www.oracle.com/technetwork/java/javas
 
 ### Installing
 
-The steps to get this system up and running are provided. You can use your own installation of gradle aswell, just remove the "w" from the next commands.
- To run inside intellij, Gradle version 4.x since the intellij plugin is dependent on it. 
+The steps to get this system up and running are provided. To use your own installation of gradle, just remove the "w" from the next commands. To run inside intellij, Gradle version 4.x is required since the intellij plugin is dependent on it. 
  
-The gradlew is [Gradle](https://gradle.org/) 4.9, as the spring boot Intellij plugin has a dependency on version 4.x. 
+The gradlew version is [Gradle](https://gradle.org/) 4.9 
  
 
 ```
